@@ -59,7 +59,8 @@ class ClientForm
                                             ->columnSpanFull(),
                                         Toggle::make('active')
                                             ->required()
-                                            ->columnSpan(1),
+                                            ->columnSpan(1)
+                                            ->visibleOn('edit'),
                                     ]),
 
                                 // Contact / Business Information
@@ -97,7 +98,7 @@ class ClientForm
                                                 'hot' => 'Hot',
                                             ])
                                             ->columnSpan(1),
-                                    ]),
+                                    ])->disabledOn('create'),
                             ]),
 
                         // Right side: Additional Information (1 column)
