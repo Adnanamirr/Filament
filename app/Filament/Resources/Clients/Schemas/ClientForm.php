@@ -17,80 +17,100 @@ class ClientForm
     {
         return $schema
             ->components([
-                Grid::make([
-                    'md' => 3
-                ])
+                Grid::make(['md' => 3])
+                    ->columnSpanFull() // Make grid span full page width
                     ->schema([
-                        Section::make()->schema([
-                                 Section::make('Personal Information')->schema([
+
+                        // Left side: Personal & Contact Information (2 columns)
+                        Section::make()
+                            ->columnSpan(2)
+                            ->schema([
+
+                                // Personal Information
+                                Section::make('Personal Information')
+                                    ->columnSpanFull()
+                                    ->schema([
                                         TextInput::make('first_name')
                                             ->required()
                                             ->string()
+                                            ->minLength(2)
                                             ->maxLength(255)
-                                            ->minLength(2),
+                                            ->columnSpan(1),
                                         TextInput::make('last_name')
                                             ->required()
                                             ->string()
+                                            ->minLength(2)
                                             ->maxLength(255)
-                                            ->minLength(2),
+                                            ->columnSpan(1),
                                         TextInput::make('email')
                                             ->label('Email address')
                                             ->email()
-                                            ->required(),
+                                            ->required()
+                                            ->columnSpan(2),
                                         TextInput::make('phone')
-                                            ->tel(),
-                                        TextInput::make('mobile'),
+                                            ->tel()
+                                            ->columnSpan(1),
+                                        TextInput::make('mobile')
+                                            ->columnSpan(1),
                                         FileUpload::make('photo')
-                                            ->acceptedFileTypes(['image/png', 'image/jpg', 'image/jpeg', 'image/webp']),
-                                        Textarea::make('linkedin'),
-
-
+                                            ->acceptedFileTypes(['image/png', 'image/jpg', 'image/jpeg', 'image/webp'])
+                                            ->columnSpan(2),
+                                        Textarea::make('linkedin')
+                                            ->columnSpanFull(),
                                         Toggle::make('active')
-                                            ->required(),
+                                            ->required()
+                                            ->columnSpan(1),
                                     ]),
+
+                                // Contact / Business Information
                                 Section::make('Contact Information')
+                                    ->columnSpanFull()
                                     ->schema([
-
                                         TextInput::make('title')
-                                        ->maxLength(255),
-                                        TextInput::make('company'),
+                                            ->maxLength(255)
+                                            ->columnSpan(1),
+                                        TextInput::make('company')
+                                            ->maxLength(255)
+                                            ->columnSpan(2),
                                         TextInput::make('role')
-                                            ->maxLength(255),
-
+                                            ->maxLength(255)
+                                            ->columnSpan(1),
                                         TextInput::make('company_website')
-                                            ->url(),
+                                            ->url()
+                                            ->columnSpan(2),
                                         Textarea::make('business_details')
                                             ->maxLength(65535)
                                             ->columnSpanFull(),
-
-                                        TextInput::make('business_type'),
+                                        TextInput::make('business_type')
+                                            ->columnSpan(1),
                                         Select::make('company_size')
                                             ->options([
                                                 'small' => 'Small',
                                                 'mid' => 'Mid',
-                                                'big' => 'Big'
-                                            ]),
+                                                'big' => 'Big',
+                                            ])
+                                            ->columnSpan(1),
                                         Select::make('temperature')
                                             ->options([
                                                 'cold' => 'Cold',
                                                 'warm' => 'Warm',
-                                                'hot' => 'Hot'
-                                            ]),
-
+                                                'hot' => 'Hot',
+                                            ])
+                                            ->columnSpan(1),
                                     ]),
-                            ])->columnSpan(2),
+                            ]),
 
+                        // Right side: Additional Information (1 column)
+                        Section::make('Additional Information')
+                            ->columnSpan(1)
+                            ->schema([
+                                Textarea::make('notes')
+                                    ->columnSpanFull(),
+                                Textarea::make('referrals')
+                                    ->columnSpanFull(),
+                            ]),
 
-                Section::make('Additional Information')
-                    ->schema([
-
-                        Textarea::make('notes'),
-                        Textarea::make('referrals')
-                            ->columnSpanFull(),
-
-                ])->columnSpan(1),
-            ]),
-        ]);
+                    ]),
+            ]);
     }
-
 }
