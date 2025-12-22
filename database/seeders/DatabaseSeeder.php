@@ -2,7 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\Address;
+use App\Models\City;
 use App\Models\Client;
+use App\Models\Country;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -22,9 +25,23 @@ class DatabaseSeeder extends Seeder
 //            'name' => 'Test User',
 //            'email' => 'test@example.com',
 //        ]);
-
         $clients = Client::factory(100)->create();
+        $countries = Country::factory(5)->create();
 
+        $cities = City::factory(20)
+            ->recycle($countries)
+            ->state([
+                'country_id' => Country::factory()
+            ])
+            ->create();
+
+        Address::factory(200)
+            ->recycle([$clients, $cities])
+            ->state([
+                'client_id' => Client::factory(),
+                'city_id' => City::factory()
+            ])
+            ->create();
 
     }
 }
