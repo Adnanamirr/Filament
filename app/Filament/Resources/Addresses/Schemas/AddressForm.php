@@ -29,7 +29,11 @@ class AddressForm
                     ->required()
                     ->maxLength(255),
 
-                Select::make('country_id')->label('Country')->options(Country::all()->pluck('name', 'id'))->required()->searchable()->preload()->live(),
+                Select::make('country_id')->label('Country')->options(Country::all()->pluck('name', 'id'))
+                    ->afterStateUpdated(function (?string $state, ?string $old, $set) {
+                        $set('city_id', null);
+                    })
+                    ->required()->searchable()->preload()->live(),
 
                 Select::make('city_id')
                     ->options(function (Get $get, Set $set){

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Clients\Schemas;
 
+use Carbon\Carbon;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -9,7 +10,9 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class ClientForm
 {
@@ -54,7 +57,13 @@ class ClientForm
                                             ->columnSpan(1),
                                         FileUpload::make('photo')
                                             ->acceptedFileTypes(['image/png', 'image/jpg', 'image/jpeg', 'image/webp'])
-                                            ->columnSpan(2),
+                                            ->columnSpan(2)
+                                            ->getUploadedFileNameForStorageUsing(
+                                                function (TemporaryUploadedFile $file , Get $get )
+                                                    {
+                                                        return (string)$get('first_name').$get('last_name').Carbon::now()->format('YmdHis').'.'.$file->extension();
+                                                     }
+                                            ),
                                         Textarea::make('linkedin')
                                             ->columnSpanFull(),
                                         Toggle::make('active')
