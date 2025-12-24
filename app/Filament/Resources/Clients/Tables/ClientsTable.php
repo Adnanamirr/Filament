@@ -8,6 +8,7 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -17,8 +18,13 @@ class ClientsTable
     {
         return $table
             ->columns([
+                ImageColumn::make('photo')
+                    ->circular(),
                 TextColumn::make('first_name')
-                    ->searchable(),
+                    ->getStateUsing(fn ($record) =>
+                        $record->first_name . ' ' . $record->last_name
+                    )
+                    ->searchable(['first_name', 'last_name']),
                 TextColumn::make('last_name')
                     ->searchable(),
                 TextColumn::make('email')
@@ -42,8 +48,6 @@ class ClientsTable
                     ->badge(),
                 TextColumn::make('temperature')
                     ->badge(),
-                TextColumn::make('photo')
-                    ->searchable(),
                 IconColumn::make('active')
                     ->boolean(),
                 TextColumn::make('created_at')
