@@ -4,13 +4,16 @@ namespace App\Filament\Resources\Clients\Tables;
 
 use App\Filament\Resources\Clients\Pages\ViewClient;
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class ClientsTable
 {
@@ -24,30 +27,18 @@ class ClientsTable
                     ->getStateUsing(fn ($record) =>
                         $record->first_name . ' ' . $record->last_name
                     )
-                    ->searchable(['first_name', 'last_name']),
+                    ->searchable(['first_name', 'last_name'])
+                    ->sortable(),
                 TextColumn::make('last_name')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('email')
                     ->label('Email address')
                     ->searchable(),
                 TextColumn::make('phone')
                     ->searchable(),
-                TextColumn::make('mobile')
-                    ->searchable(),
-                TextColumn::make('title')
-                    ->searchable(),
-                TextColumn::make('company')
-                    ->searchable(),
-                TextColumn::make('role')
-                    ->searchable(),
-                TextColumn::make('company_website')
-                    ->searchable(),
-                TextColumn::make('business_type')
-                    ->searchable(),
-                TextColumn::make('company_size')
-                    ->badge(),
-                TextColumn::make('temperature')
-                    ->badge(),
+
+
                 IconColumn::make('active')
                     ->boolean(),
                 TextColumn::make('created_at')
@@ -60,11 +51,15 @@ class ClientsTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                Filter::make('active')
+                    ->query(function (Builder $query) {
+                        $query->where('active', true);
+                    }),
             ])
             ->recordActions([
                 EditAction::make(),
-                ViewAction::make()
+                ViewAction::make(),
+                DeleteAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
